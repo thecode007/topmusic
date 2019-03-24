@@ -1,5 +1,6 @@
 package com.topmusic.ui.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.topmusic.R;
@@ -47,16 +49,20 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.MyView
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    // setting the intent filter
+                    Intent intent= new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("https://www.youtube.com/results?search_query="
+                                    + songs.get(holder.getAdapterPosition()).getArtist() + " " +
+                                    songs.get(holder.getAdapterPosition()).getName()));
+                    intent.setPackage("com.google.android.youtube");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    // sending the intent with the filter to start the app
+                    context.startActivity(intent);
+                }catch (ActivityNotFoundException exception){
+                    Toast.makeText(context, "Failed to search for the song, youtube app not found", Toast.LENGTH_LONG).show();
+                }
 
-                // setting the intent filter
-                Intent intent= new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://www.youtube.com/results?search_query="
-                        + songs.get(holder.getAdapterPosition()).getArtist() + " " +
-                                songs.get(holder.getAdapterPosition()).getName()));
-                intent.setPackage("com.google.android.youtube");
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                // sending the intent with the filter to start the app
-                context.startActivity(intent);
             }
         });
 
