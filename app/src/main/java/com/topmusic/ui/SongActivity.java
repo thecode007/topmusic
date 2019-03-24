@@ -42,7 +42,9 @@ public class SongActivity extends AppCompatActivity {
         LinearLayoutManager linearVertical = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearVertical);
 
-        topByCountryService.countryList("lebanon").enqueue(new Callback<ResponseBody>() {
+        String countryName = getIntent().getExtras().getString("country");
+
+        topByCountryService.countryList(countryName).enqueue(new Callback<ResponseBody>() {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
